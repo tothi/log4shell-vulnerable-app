@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Server>
+  <Service name="Catalina">
+    <Connector address="0.0.0.0" port="8888" protocol="HTTP/1.1"/>
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost">
+      </Host>
+    </Engine>
+  </Service>
+</Server>
