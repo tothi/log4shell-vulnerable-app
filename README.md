@@ -78,4 +78,8 @@ on 192.168.56.101:8888 and uses Tomcat 8.5 as a backend. Tomcat 8 (in the classp
 
 6. On the target host, calc.exe should be spawned, reaching RCE.
 
-![](./log4jshell_rce_demo.png)
+![](./log4shell_rce_demo.png)
+
+UPDATE: here is an extra PoC screenshot for those who are curious and doubt whether launching a calc.exe is useful for anything at all. In this screenshot, replaced the calc.exe payload with an Empire stager giving a full featured C2 Empire Agent (also bypassing up-to-date Windows Defender).
+
+![](./log4shell_rce_demo_empire.png)
