@@ -24,7 +24,7 @@ simply run:
 or on Windows platform:
 
 ```
-.\gradlew.bay appRun
+.\gradlew.bat appRun
 ```
 
 (JDK is needed.)
