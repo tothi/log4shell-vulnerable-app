@@ -14,6 +14,8 @@ Gradle wrapper should solve everything. Simply git clone the repo:
 git clone https://github.com/tothi/log4shell-vulnerable-app
 ```
 
+### running with gradle wrapper
+
 And in the project dir with the file [build.gradle](./build.gradle),
 simply run:
 
@@ -27,7 +29,37 @@ or on Windows platform:
 .\gradlew.bat appRun
 ```
 
-(JDK is needed.)
+JDK is needed. Versions 8 and 11 were tested and are working, 17 seems to
+have issues.
+
+### building a portable fat jar
+
+This method builds a one-file portable fat JAR including an embedded
+Tomcat server.
+
+Simply run the gradle wrapper with the configured `shadowJar' task:
+
+```
+./gradlew shadowJar
+```
+
+or on Windows platform:
+
+```
+.\gradlew.bat shadowJar
+```
+
+The compiled and packages JAR file will be built in the folder `./build/libs`.
+
+It is portable and can be launched using JRE:
+
+```
+java -jar ./build/libs/log4shell-vulnerable-app-all.jar
+```
+
+The all-in-one portable JAR is available on the [releases page](https://github.com/tothi/log4shell-vulnerable-app/releases) here in the repo.
+
+### interacting with the vulnerable application
 
 The vulnerable application should listen on _all_ interfaces by
 default (DANGEROUS behavior if you run it on a production box).

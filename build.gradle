@@ -1,6 +1,8 @@
 plugins {
   id "war"
   id "org.gretty" version "3.0.5"
+  id "com.github.johnrengelman.shadow" version "7.1.2"
+  id "java"
 }
 
 sourceCompatibility = "1.8"
@@ -12,9 +14,29 @@ repositories {
  
 dependencies {
   implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
+  if (project.gradle.startParameter.taskNames.first().contains("shadow")) {
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.75'
+  }
 }
 
 gretty {
   contextPath = 'app'
   servletContainer = 'tomcat85'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+      if (!project.gradle.startParameter.taskNames.first().contains("shadow")) {
+        exclude '**/launch/**'
+      }
+    }
+  }
+}
+
+jar {
+  manifest {
+    attributes('Main-Class': 'launch.Main')
+  }
 }
