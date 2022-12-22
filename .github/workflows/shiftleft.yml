@@ -29,10 +29,10 @@ jobs:
         java-version: 11.0.x
 
     - name: Package with Maven
-      run: mvn clean package -DskipTests
+      run: ./gradlew shadowJar
 
     - name: NextGen Static Analysis
-      run: ${GITHUB_WORKSPACE}/sl analyze --wait --app log4shell-vulnerable-app --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --vcs-prefix-correction "*=src/main/java/" --java ./target/java-sec-code-1.0.0.jar
+      run: ${GITHUB_WORKSPACE}/sl analyze --wait --app log4shell-vulnerable-app --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --java --cpg ./build/libs/log4shell-vulnerable-app-all.jar
 
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
