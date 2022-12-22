@@ -1,0 +1,49 @@
+# This workflow integrates ShiftLeft NG SAST with GitHub
+# Visit https://docs.shiftleft.io for help
+name: ShiftLeft
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    # We recommend triggering a scan when merging to your default branch
+    # as a best practice, especially if you'd like to compare the results
+    # of two scans (e.g., a feature branch against the default branch)
+    branches:
+      - main
+      - master
+jobs:
+  ngsast-build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Download the ShiftLeft CLI and set permissions
+      run: |
+        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
+
+    # ShiftLeft requires Java 1.8
+    - name: Set up Java
+      uses: actions/setup-java@v1.4.3
+      with:
+        java-version: 1.8
+
+    - name: Package with Maven
+      run: mvn clean package -DskipTests
+
+    - name: NextGen Static Analysis
+      run: ${GITHUB_WORKSPACE}/sl analyze --wait --app log4shell-vulnerable-app --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --vcs-prefix-correction "*=src/main/java/" --java ./target/java-sec-code-1.0.0.jar
+
+      env:
+        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+        
+    - name: Validate Build Rules
+      run: |
+        ${GITHUB_WORKSPACE}/sl check-analysis --v2 --app java-sec-code \
+            --report \
+            --github-pr-number=${{github.event.number}} \
+            --github-pr-user=${{ github.repository_owner }} \
+            --github-pr-repo=${{ github.event.repository.name }} \
+            --github-token=${{ secrets.GITHUB_TOKEN }}
+      env:
+        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }} 
