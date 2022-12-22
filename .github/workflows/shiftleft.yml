@@ -39,7 +39,7 @@ jobs:
         
     - name: Validate Build Rules
       run: |
-        ${GITHUB_WORKSPACE}/sl check-analysis --v2 --app log4shell-vulnerable-app
+        ${GITHUB_WORKSPACE}/sl check-analysis --v2 --app log4shell-vulnerable-app \
             --report \
             --github-pr-number=${{ github.run_number }} \
             --github-pr-user=${{ github.repository_owner }} \
