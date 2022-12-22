@@ -32,19 +32,19 @@ jobs:
       run: ./gradlew shadowJar
 
     - name: NextGen Static Analysis (PR)
-      if: ${{ GITHUB_EVENTNAME == 'pull_request' }}
+      if: ${{ GITHUB_EVENT_NAME == 'pull_request' }}
       run: ${GITHUB_WORKSPACE}/sl analyze --wait --app log4shell-vulnerable-app --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --java --cpg ./build/libs/log4shell-vulnerable-app-all.jar
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
     - name: NextGen Static Analysis
-      if: ${{ GITHUB_EVENTNAME != 'pull_request' }
+      if: ${{ GITHUB_EVENT_NAME != 'pull_request' }}
       run: ${GITHUB_WORKSPACE}/sl analyze --app log4shell-vulnerable-app --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --java --cpg ./build/libs/log4shell-vulnerable-app-all.jar
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
     - name: Validate Build Rules
-      if: ${{ GITHUB_EVENTNAME == 'pull_request' }}
+      if: ${{ GITHUB_EVENT_NAME == 'pull_request' }}
       run: |
         ${GITHUB_WORKSPACE}/sl check-analysis --v2 --app log4shell-vulnerable-app \
             --report \
