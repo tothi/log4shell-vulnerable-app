@@ -1,0 +1,13 @@
+version: 2 # implies that check-analysis v2 should be used and therefore
+           # the --v2 flag can be omitted when running sl check-analysis
+source:
+  branch: main
+
+build_rules:
+  - id: zero-new-reachable
+    finding_types:
+      - vuln
+      - oss_vuln
+    options:
+      reachable: true
+      num_findings: 10
